@@ -1,5 +1,7 @@
 # Wheel of Life
 
+**Try it:** https://wheel-of-life-psi-nine.vercel.app/
+
 A calm Wheel of Life for anxious and ADHD minds, for anyone who keeps feeling "not enough" — at work, in relationships, at home or with money — and for people whose body or mind is struggling. Four short steps:
 
 1. **Check in** — rate 9 areas 1–10, including Body and Mind & mood separately (sliders, or tap/drag the wheel). Tick *Not in my control right now* or *Good enough for this season* to let an area go.
