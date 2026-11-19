@@ -1,6 +1,16 @@
 import { useEffect, useState } from 'react'
 import { ENERGY, MAX_VALUES, SPHERES, VALUES, type Sphere, type SphereId } from './data.ts'
-import { energyLeft, focusAreas, importance, initialState, tradeoffFrom, type SphereState, type State } from './priority.ts'
+import {
+  energyLeft,
+  focusAreas,
+  importance,
+  initialState,
+  isHeavy,
+  tradeoffFrom,
+  withDefaults,
+  type SphereState,
+  type State,
+} from './priority.ts'
 import { Wheel } from './Wheel.tsx'
 
 const KEY = 'wheel-of-life:v1'
@@ -9,8 +19,7 @@ const byId = Object.fromEntries(SPHERES.map((s) => [s.id, s])) as Record<SphereI
 function load(): State {
   try {
     const saved = JSON.parse(localStorage.getItem(KEY) ?? 'null')
-    // Merge so spheres added later still get defaults.
-    if (saved?.spheres) return { ...initialState(), ...saved, spheres: { ...initialState().spheres, ...saved.spheres } }
+    if (saved?.spheres) return withDefaults(saved)
   } catch {
     /* private mode or bad data: start fresh */
   }
@@ -40,7 +49,8 @@ export default function App() {
   const update: Update = (id, patch) =>
     setState((s) => ({ ...s, spheres: { ...s.spheres, [id]: { ...s.spheres[id], ...patch } } }))
 
-  const focus = focusAreas(state)
+  const heavy = isHeavy(state)
+  const focus = focusAreas(state, heavy ? 1 : 3)
   const focusIds = focus.map((f) => f.id)
 
   return (
@@ -90,7 +100,7 @@ export default function App() {
           {step === 0 && <CheckIn state={state} update={update} onHover={setHover} />}
           {step === 1 && <Values state={state} setState={setState} />}
           {step === 2 && <Tradeoffs state={state} update={update} focus={focusIds} onHover={setHover} />}
-          {step === 3 && <Focus state={state} update={update} focus={focus} />}
+          {step === 3 && <Focus state={state} update={update} focus={focus} heavy={heavy} />}
 
           <footer className="panel-nav">
             {step > 0 && (
@@ -161,7 +171,25 @@ function CheckIn({ state, update, onHover }: { state: State; update: Update; onH
                   <input type="checkbox" checked={st.goodEnough} onChange={(e) => update(s.id, { goodEnough: e.target.checked })} />
                   Good enough for this season
                 </label>
+                <label>
+                  <input type="checkbox" checked={st.notEnough} onChange={(e) => update(s.id, { notEnough: e.target.checked })} />
+                  The “I'm not enough” voice is loud here
+                </label>
               </div>
+              {st.notEnough && (
+                <div className="kind">
+                  <p>💛 {s.reframe}</p>
+                  <label>
+                    One thing I did here anyway, even tiny:
+                    <input
+                      type="text"
+                      value={st.didAnyway}
+                      placeholder="e.g. I got out of bed, I replied to one message, I washed one plate"
+                      onChange={(e) => update(s.id, { didAnyway: e.target.value })}
+                    />
+                  </label>
+                </div>
+              )}
             </div>
           )
         })}
@@ -282,10 +310,53 @@ function Tradeoffs({ state, update, focus, onHover }: { state: State; update: Up
   )
 }
 
-function Focus({ state, update, focus }: { state: State; update: Update; focus: ReturnType<typeof focusAreas> }) {
+function Focus({
+  state,
+  update,
+  focus,
+  heavy,
+}: {
+  state: State
+  update: Update
+  focus: ReturnType<typeof focusAreas>
+  heavy: boolean
+}) {
   const resting = SPHERES.filter((s) => state.spheres[s.id].outOfControl || state.spheres[s.id].goodEnough)
+  const wins = SPHERES.filter((s) => state.spheres[s.id].didAnyway.trim())
   return (
     <div>
+      {heavy && (
+        <div className="heavy" role="note">
+          <h4>This looks like a heavy season.</h4>
+          <p>
+            When everything feels low, the goal is not to fix your life — it's to get through today a little more
+            gently. So here is just <strong>one</strong> area and its smallest step. Getting through is enough.
+          </p>
+          <p className="support">
+            If the heaviness doesn't lift, or you have thoughts of hurting yourself, you deserve real support: talk to
+            someone you trust, a doctor, or a free helpline — find one in your country at{' '}
+            <a href="https://findahelpline.com" target="_blank" rel="noreferrer">
+              findahelpline.com
+            </a>
+            .
+          </p>
+        </div>
+      )}
+
+      {wins.length > 0 && (
+        <div className="wins">
+          <h4>You did these anyway</h4>
+          <ul>
+            {wins.map((s) => (
+              <li key={s.id}>
+                {s.emoji} {state.spheres[s.id].didAnyway}
+              </li>
+            ))}
+          </ul>
+          <p>On a hard day, that is not “not enough”. That is effort.</p>
+        </div>
+      )}
+
       <p className="intro">
         {focus.length === 0
           ? 'Everything is either feeling great or set aside on purpose. Enjoy that. 🌤️'
@@ -307,8 +378,9 @@ function Focus({ state, update, focus }: { state: State; update: Update; focus: 
                 Feels {st.score}/10{why.length > 0 && <> and connects to {why.join(' & ')}</>}.
                 {st.energy > 0 && <> {st.energy} energy planned.</>}
               </p>
+              {st.notEnough && <p className="kind small-note">💛 {s.reframe}</p>}
               <ul className="tiny">
-                {s.tinySteps.map((t, k) => (
+                {(heavy ? s.tinySteps.slice(0, 1) : s.tinySteps).map((t, k) => (
                   <li key={t}>
                     <label>
                       <input

@@ -481,3 +481,61 @@ input[type='checkbox'] {
     animation: none !important;
   }
 }
+
+/* ---- "not enough" support ---- */
+.kind {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: color-mix(in srgb, #f2c94c 14%, transparent);
+}
+.kind p {
+  margin: 0 0 8px;
+}
+.kind.small-note {
+  margin: 0 0 8px;
+  font-size: 0.92rem;
+}
+.kind label {
+  display: grid;
+  gap: 6px;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+.kind input[type='text'] {
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--card);
+}
+.heavy,
+.wins {
+  padding: 14px 16px;
+  border-radius: 14px;
+  margin-bottom: 14px;
+}
+.heavy {
+  background: var(--soft);
+}
+.wins {
+  background: color-mix(in srgb, #5bb88a 14%, transparent);
+}
+.heavy h4,
+.wins h4 {
+  margin: 0 0 6px;
+}
+.heavy p,
+.wins p {
+  margin: 0 0 6px;
+}
+.wins ul {
+  margin: 0 0 6px;
+  padding-left: 1.2em;
+}
+.support {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+.support a {
+  color: var(--accent);
+}

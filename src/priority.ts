@@ -6,6 +6,8 @@ export type SphereState = {
   goodEnough: boolean // "fine for this season" — no need to push
   energy: number // energy points planned this week
   stepsDone: boolean[]
+  notEnough: boolean // "the 'I'm not enough' voice is loud here"
+  didAnyway: string // evidence against that voice: one thing done, however small
 }
 
 export type State = {
@@ -13,12 +15,34 @@ export type State = {
   spheres: Record<SphereId, SphereState>
 }
 
+const freshSphere = (): SphereState => ({
+  score: 5,
+  outOfControl: false,
+  goodEnough: false,
+  energy: 0,
+  stepsDone: [],
+  notEnough: false,
+  didAnyway: '',
+})
+
 export const initialState = (): State => ({
   values: [],
-  spheres: Object.fromEntries(
-    SPHERES.map((s): [SphereId, SphereState] => [s.id, { score: 5, outOfControl: false, goodEnough: false, energy: 0, stepsDone: [] }]),
-  ) as Record<SphereId, SphereState>,
+  spheres: Object.fromEntries(SPHERES.map((s): [SphereId, SphereState] => [s.id, freshSphere()])) as Record<SphereId, SphereState>,
 })
+
+/** Fill in defaults so answers saved by an older version still load. */
+export function withDefaults(saved: Partial<State>): State {
+  return {
+    values: saved.values ?? [],
+    spheres: Object.fromEntries(
+      SPHERES.map((s): [SphereId, SphereState] => [s.id, { ...freshSphere(), ...saved.spheres?.[s.id] }]),
+    ) as Record<SphereId, SphereState>,
+  }
+}
+
+/** Most areas feel rough: shrink the plan to one area so it doesn't add to the weight. */
+export const isHeavy = (state: State) =>
+  SPHERES.reduce((sum, s) => sum + state.spheres[s.id].score, 0) / SPHERES.length <= 4
 
 /** 1 = baseline, +1 for every chosen core value this sphere feeds. */
 export function importance(id: SphereId, values: string[]): number {
