@@ -15,6 +15,7 @@ import {
 import { HeartHandshake, Sparkles } from 'lucide-react'
 import { SphereIcon } from './icons.tsx'
 import { Wheel } from './Wheel.tsx'
+import { Tasks } from './Tasks.tsx'
 
 const KEY = 'wheel-of-life:v1'
 const byId = Object.fromEntries(SPHERES.map((s) => [s.id, s])) as Record<SphereId, Sphere>
@@ -67,6 +68,8 @@ export default function App() {
           that matter most right now.
         </p>
       </header>
+
+      <Tasks state={state} setState={setState} />
 
       <main>
         <section className="card wheel-card" aria-label="Your wheel">
@@ -121,8 +124,8 @@ export default function App() {
               <button
                 className="ghost"
                 onClick={() => {
-                  if (confirm('Start a fresh check-in? This clears your answers.')) {
-                    setState(initialState())
+                  if (confirm('Start a fresh check-in? This clears your answers (tasks stay).')) {
+                    setState((s) => ({ ...initialState(), tasks: s.tasks }))
                     setStep(0)
                   }
                 }}

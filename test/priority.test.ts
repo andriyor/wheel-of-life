@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { budget, energyLeft, focusAreas, importance, initialState, isHeavy, tradeoffFrom, withDefaults } from '../src/priority.ts'
+import { budget, energyLeft, focusAreas, importance, initialState, isHeavy, rankTasks, tradeoffFrom, withDefaults } from '../src/priority.ts'
 
 test('core values raise the importance of the spheres they feed', () => {
   assert.equal(importance('money', []), 1)
@@ -51,4 +51,20 @@ test('a low-energy stretch halves the budget and can leave you over it', () => {
   s.lowEnergy = true
   assert.equal(budget(s), 5)
   assert.equal(energyLeft(s), -2)
+})
+
+test('tasks rank by sphere need, urgency and effort; low energy sinks big tasks', () => {
+  const s = initialState()
+  s.spheres.health.score = 2
+  s.spheres.fun.score = 9
+  const task = (id: string, sphere: 'health' | 'fun', effort: 1 | 2 | 3, urgent = false) =>
+    ({ id, title: id, sphere, effort, urgent, done: false })
+  s.tasks = [task('gym', 'health', 3), task('game', 'fun', 1), task('water', 'health', 1), { ...task('old', 'fun', 1), done: true }]
+  assert.deepEqual(rankTasks(s).map((r) => r.task.id), ['water', 'gym', 'game']) // done tasks drop out
+  s.tasks.push(task('bill', 'fun', 1, true))
+  assert.equal(rankTasks(s)[0].task.id, 'bill') // urgent beats a calm area
+  s.tasks = [task('gym', 'health', 3), task('game', 'fun', 1)]
+  assert.equal(rankTasks(s)[0].task.id, 'gym')
+  s.lowEnergy = true
+  assert.equal(rankTasks(s)[0].task.id, 'game')
 })
