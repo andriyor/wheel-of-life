@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
-import { ENERGY, MAX_VALUES, SPHERES, VALUES, type Sphere, type SphereId } from './data.ts'
+import { MAX_VALUES, SPHERES, VALUES, type Sphere, type SphereId } from './data.ts'
 import {
+  budget,
   energyLeft,
   focusAreas,
   importance,
@@ -50,7 +51,9 @@ export default function App() {
     setState((s) => ({ ...s, spheres: { ...s.spheres, [id]: { ...s.spheres[id], ...patch } } }))
 
   const heavy = isHeavy(state)
-  const focus = focusAreas(state, heavy ? 1 : 3)
+  // Less to give = fewer areas to hold.
+  const focus = focusAreas(state, heavy ? 1 : state.lowEnergy ? 2 : 3)
+  const setLowEnergy = (lowEnergy: boolean) => setState((s) => ({ ...s, lowEnergy }))
   const focusIds = focus.map((f) => f.id)
 
   return (
@@ -97,9 +100,9 @@ export default function App() {
             ))}
           </nav>
 
-          {step === 0 && <CheckIn state={state} update={update} onHover={setHover} />}
+          {step === 0 && <CheckIn state={state} update={update} onHover={setHover} setLowEnergy={setLowEnergy} />}
           {step === 1 && <Values state={state} setState={setState} />}
-          {step === 2 && <Tradeoffs state={state} update={update} focus={focusIds} onHover={setHover} />}
+          {step === 2 && <Tradeoffs state={state} update={update} focus={focusIds} onHover={setHover} setLowEnergy={setLowEnergy} />}
           {step === 3 && <Focus state={state} update={update} focus={focus} heavy={heavy} />}
 
           <footer className="panel-nav">
@@ -134,10 +137,33 @@ export default function App() {
 
 const tint = (color: string) => ({ '--c': color }) as React.CSSProperties
 
-function CheckIn({ state, update, onHover }: { state: State; update: Update; onHover: Hover }) {
+function LowEnergyToggle({ on, set }: { on: boolean; set: (on: boolean) => void }) {
+  return (
+    <label className={`low-energy${on ? ' on' : ''}`}>
+      <input type="checkbox" checked={on} onChange={(e) => set(e.target.checked)} />
+      <span>
+        <strong>My body or mind has less to give right now</strong>
+        <small>Illness, pain, depression, burnout, a bad week. Halves your energy and makes every step rest-sized.</small>
+      </span>
+    </label>
+  )
+}
+
+function CheckIn({
+  state,
+  update,
+  onHover,
+  setLowEnergy,
+}: {
+  state: State
+  update: Update
+  onHover: Hover
+  setLowEnergy: (on: boolean) => void
+}) {
   return (
     <div>
       <p className="intro">No right answers. Go with your first feeling — you can change it any time.</p>
+      <LowEnergyToggle on={state.lowEnergy} set={setLowEnergy} />
       <div className="list">
         {SPHERES.map((s) => {
           const st = state.spheres[s.id]
@@ -230,8 +256,22 @@ function Values({ state, setState }: { state: State; setState: React.Dispatch<Re
   )
 }
 
-function Tradeoffs({ state, update, focus, onHover }: { state: State; update: Update; focus: SphereId[]; onHover: Hover }) {
+function Tradeoffs({
+  state,
+  update,
+  focus,
+  onHover,
+  setLowEnergy,
+}: {
+  state: State
+  update: Update
+  focus: SphereId[]
+  onHover: Hover
+  setLowEnergy: (on: boolean) => void
+}) {
+  const total = budget(state)
   const left = energyLeft(state)
+  const used = Math.min(total, total - left)
   const [blocked, setBlocked] = useState<SphereId>()
   const from = blocked && tradeoffFrom(state, blocked)
 
@@ -245,15 +285,22 @@ function Tradeoffs({ state, update, focus, onHover }: { state: State; update: Up
   return (
     <div>
       <p className="intro">
-        You have <strong>{ENERGY} energy points</strong> this week. A point given to one area can't go to another —
+        You have <strong>{total} energy points</strong> this week. A point given to one area can't go to another —
         that's a tradeoff, not a failure.
       </p>
-      <div className="meter" role="meter" aria-valuemin={0} aria-valuemax={ENERGY} aria-valuenow={ENERGY - left} aria-label="Energy planned">
-        {Array.from({ length: ENERGY }, (_, i) => (
-          <span key={i} className={i < ENERGY - left ? 'used' : ''} />
+      <LowEnergyToggle on={state.lowEnergy} set={setLowEnergy} />
+      <div className="meter" role="meter" aria-valuemin={0} aria-valuemax={total} aria-valuenow={used} aria-label="Energy planned">
+        {Array.from({ length: total }, (_, i) => (
+          <span key={i} className={i < used ? 'used' : ''} />
         ))}
-        <em>{left} left</em>
+        <em>{left >= 0 ? `${left} left` : `${-left} over`}</em>
       </div>
+      {left < 0 && (
+        <p className="tradeoff" role="status">
+          You have less to give than you planned — that's okay. Take {-left} point{left === -1 ? '' : 's'} back from
+          wherever hurts least.
+        </p>
+      )}
 
       {blocked && from && (
         <div className="tradeoff" role="status">
@@ -321,6 +368,8 @@ function Focus({
   focus: ReturnType<typeof focusAreas>
   heavy: boolean
 }) {
+  const small = heavy || state.lowEnergy
+  const hurting = SPHERES.filter((s) => (s.id === 'health' || s.id === 'mind') && state.spheres[s.id].score <= 3)
   const resting = SPHERES.filter((s) => state.spheres[s.id].outOfControl || state.spheres[s.id].goodEnough)
   const wins = SPHERES.filter((s) => state.spheres[s.id].didAnyway.trim())
   return (
@@ -341,6 +390,23 @@ function Focus({
             .
           </p>
         </div>
+      )}
+
+      {state.lowEnergy && (
+        <div className="heavy" role="note">
+          <h4>Low-energy mode</h4>
+          <p>
+            Rest is part of the plan, not a break from it. Every step below is rest-sized — doable from bed, on a bad
+            day. Doing none of them is also allowed.
+          </p>
+        </div>
+      )}
+
+      {!heavy && hurting.length > 0 && (
+        <p className="support">
+          {hurting.map((s) => s.name).join(' and ')} {hurting.length === 1 ? 'feels' : 'feel'} rough. If it has been like
+          this for a while, talking to a doctor or therapist is looking after yourself — not making a fuss.
+        </p>
       )}
 
       {wins.length > 0 && (
@@ -380,7 +446,8 @@ function Focus({
               </p>
               {st.notEnough && <p className="kind small-note">💛 {s.reframe}</p>}
               <ul className="tiny">
-                {(heavy ? s.tinySteps.slice(0, 1) : s.tinySteps).map((t, k) => (
+                {/* rest step uses its own slot (3) so ticks don't jump between modes */}
+                {(small ? [[s.restStep, 3] as const] : s.tinySteps.map((t, k) => [t, k] as const)).map(([t, k]) => (
                   <li key={t}>
                     <label>
                       <input

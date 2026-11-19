@@ -1,4 +1,4 @@
-import { ENERGY, SPHERES, VALUES, type SphereId } from './data.ts'
+import { ENERGY, LOW_ENERGY, SPHERES, VALUES, type SphereId } from './data.ts'
 
 export type SphereState = {
   score: number // 1–10, how it feels right now
@@ -12,6 +12,7 @@ export type SphereState = {
 
 export type State = {
   values: string[]
+  lowEnergy: boolean // body or mind has less to give right now
   spheres: Record<SphereId, SphereState>
 }
 
@@ -27,6 +28,7 @@ const freshSphere = (): SphereState => ({
 
 export const initialState = (): State => ({
   values: [],
+  lowEnergy: false,
   spheres: Object.fromEntries(SPHERES.map((s): [SphereId, SphereState] => [s.id, freshSphere()])) as Record<SphereId, SphereState>,
 })
 
@@ -34,6 +36,7 @@ export const initialState = (): State => ({
 export function withDefaults(saved: Partial<State>): State {
   return {
     values: saved.values ?? [],
+    lowEnergy: saved.lowEnergy ?? false,
     spheres: Object.fromEntries(
       SPHERES.map((s): [SphereId, SphereState] => [s.id, { ...freshSphere(), ...saved.spheres?.[s.id] }]),
     ) as Record<SphereId, SphereState>,
@@ -64,8 +67,11 @@ export function focusAreas(state: State, limit = 3): Ranked[] {
     .slice(0, limit)
 }
 
+export const budget = (state: State) => (state.lowEnergy ? LOW_ENERGY : ENERGY)
+
+/** Can go negative when the budget shrinks after planning; the UI asks to take points back. */
 export const energyLeft = (state: State) =>
-  ENERGY - SPHERES.reduce((sum, s) => sum + state.spheres[s.id].energy, 0)
+  budget(state) - SPHERES.reduce((sum, s) => sum + state.spheres[s.id].energy, 0)
 
 /** When energy runs out, the sphere you'd give up a point from first: the least important one that has some. */
 export function tradeoffFrom(state: State, forId: SphereId): SphereId | undefined {

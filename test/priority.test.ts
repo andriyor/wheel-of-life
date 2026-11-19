@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { energyLeft, focusAreas, importance, initialState, isHeavy, tradeoffFrom, withDefaults } from '../src/priority.ts'
+import { budget, energyLeft, focusAreas, importance, initialState, isHeavy, tradeoffFrom, withDefaults } from '../src/priority.ts'
 
 test('core values raise the importance of the spheres they feed', () => {
   assert.equal(importance('money', []), 1)
@@ -43,4 +43,12 @@ test('older saved answers get the new fields', () => {
   assert.equal(s.spheres.home.score, 2)
   assert.equal(s.spheres.home.didAnyway, '')
   assert.equal(s.spheres.money.score, 5)
+})
+
+test('a low-energy stretch halves the budget and can leave you over it', () => {
+  const s = initialState()
+  s.spheres.love.energy = 7
+  s.lowEnergy = true
+  assert.equal(budget(s), 5)
+  assert.equal(energyLeft(s), -2)
 })
