@@ -12,7 +12,6 @@ export type SphereId =
 export type Sphere = {
   id: SphereId
   name: string
-  emoji: string
   color: string
   question: string
   // A kind answer to the "I'm not enough here" voice.
@@ -27,7 +26,6 @@ export const SPHERES: Sphere[] = [
   {
     id: 'health',
     name: 'Body',
-    emoji: '🌿',
     color: '#5bb88a',
     question: 'How is your body — energy, pain, sleep, illness?',
     reframe: "Your body is carrying you through a hard time. Resting counts as care, not laziness.",
@@ -37,7 +35,6 @@ export const SPHERES: Sphere[] = [
   {
     id: 'mind',
     name: 'Mind & mood',
-    emoji: '☁️',
     color: '#8fa6c4',
     question: 'How is your mind — mood, worry, overwhelm?',
     reframe: "A struggling mind is not a weak one. You are carrying something heavy, and you're still here.",
@@ -47,7 +44,6 @@ export const SPHERES: Sphere[] = [
   {
     id: 'career',
     name: 'Work',
-    emoji: '💼',
     color: '#5a8dd6',
     question: 'How okay do you feel about your work or studies?',
     reframe: "Your worth is not your output. A hard day's best looks smaller — it still counts.",
@@ -57,7 +53,6 @@ export const SPHERES: Sphere[] = [
   {
     id: 'money',
     name: 'Money',
-    emoji: '🪙',
     color: '#d6a74a',
     question: 'How calm do you feel when you think about money?',
     reframe: "Money stress is a situation, not a verdict on you. Even looking at it is brave.",
@@ -67,7 +62,6 @@ export const SPHERES: Sphere[] = [
   {
     id: 'love',
     name: 'Friends & love',
-    emoji: '💗',
     color: '#e07a9a',
     question: 'How connected do you feel to the people you care about?',
     reframe: "You don't have to be perfect to be loved. Showing up imperfectly is enough.",
@@ -77,7 +71,6 @@ export const SPHERES: Sphere[] = [
   {
     id: 'family',
     name: 'Family',
-    emoji: '🏡',
     color: '#c47fd0',
     question: 'How do things feel with your family right now?',
     reframe: "You can love your family and still have limits. Both are allowed.",
@@ -87,7 +80,6 @@ export const SPHERES: Sphere[] = [
   {
     id: 'fun',
     name: 'Fun & rest',
-    emoji: '🎈',
     color: '#ef9a5a',
     question: 'How much do you get to play and truly switch off?',
     reframe: "Joy is not a reward you have to earn first. You're allowed to rest now.",
@@ -97,7 +89,6 @@ export const SPHERES: Sphere[] = [
   {
     id: 'growth',
     name: 'Growth',
-    emoji: '🌱',
     color: '#58b6c0',
     question: 'How much are you learning or becoming who you want to be?',
     reframe: "Growing slowly is still growing. Getting through a hard season is growth too.",
@@ -107,7 +98,6 @@ export const SPHERES: Sphere[] = [
   {
     id: 'home',
     name: 'Home & space',
-    emoji: '🪴',
     color: '#9a8fd6',
     question: 'How does your space feel — calm, or cluttered and loud?',
     reframe: "A messy home means a tired or busy person, not a bad one. Done beats perfect.",

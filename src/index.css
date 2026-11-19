@@ -125,11 +125,7 @@ main {
 .slice.let-go .slice-fill {
   opacity: 0.25;
 }
-.slice-emoji {
-  font-size: 22px;
-  text-anchor: middle;
-  dominant-baseline: central;
-}
+
 .slice-stars {
   font-size: 11px;
   fill: #d6a74a;
@@ -232,8 +228,20 @@ main {
   color: var(--muted);
   font-size: 0.85rem;
 }
-.emoji {
-  font-size: 1.5rem;
+.icon {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--c, var(--accent)) 14%, transparent);
+}
+.inline {
+  vertical-align: -0.2em;
+}
+.feeds svg {
+  margin-right: 4px;
 }
 .score {
   font-size: 1.4rem;

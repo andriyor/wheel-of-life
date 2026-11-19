@@ -12,6 +12,8 @@ import {
   type SphereState,
   type State,
 } from './priority.ts'
+import { HeartHandshake, Sparkles } from 'lucide-react'
+import { SphereIcon } from './icons.tsx'
 import { Wheel } from './Wheel.tsx'
 
 const KEY = 'wheel-of-life:v1'
@@ -72,7 +74,7 @@ export default function App() {
           <p className="hint" aria-live="polite">
             {hover ? (
               <>
-                {byId[hover].emoji} <strong>{byId[hover].name}</strong> feels {feeling(state.spheres[hover].score)} (
+                <SphereIcon id={hover} size={18} className="inline" /> <strong>{byId[hover].name}</strong> feels {feeling(state.spheres[hover].score)} (
                 {state.spheres[hover].score}/10)
               </>
             ) : (
@@ -170,7 +172,9 @@ function CheckIn({
           return (
             <div key={s.id} className="row" style={tint(s.color)} onMouseEnter={() => onHover(s.id)}>
               <label className="row-head" htmlFor={`score-${s.id}`}>
-                <span className="emoji">{s.emoji}</span>
+                <span className="icon">
+                  <SphereIcon id={s.id} size={24} />
+                </span>
                 <span className="grow">
                   <strong>{s.name}</strong>
                   <small>{s.question}</small>
@@ -204,7 +208,9 @@ function CheckIn({
               </div>
               {st.notEnough && (
                 <div className="kind">
-                  <p>💛 {s.reframe}</p>
+                  <p>
+                    <HeartHandshake size={18} className="inline" /> {s.reframe}
+                  </p>
                   <label>
                     One thing I did here anyway, even tiny:
                     <input
@@ -244,7 +250,9 @@ function Values({ state, setState }: { state: State; setState: React.Dispatch<Re
                 <strong>{v.name}</strong>
                 <small>{v.hint}</small>
                 <span className="feeds" title={`Feeds ${v.feeds.map((f) => byId[f].name).join(', ')}`}>
-                  {v.feeds.map((f) => byId[f].emoji).join(' ')}
+                  {v.feeds.map((f) => (
+                    <SphereIcon key={f} id={f} size={16} />
+                  ))}
                 </span>
               </span>
             </label>
@@ -331,7 +339,9 @@ function Tradeoffs({
           const letGo = st.outOfControl || st.goodEnough
           return (
             <div key={s.id} className={`row compact${letGo ? ' let-go' : ''}`} style={tint(s.color)} onMouseEnter={() => onHover(s.id)}>
-              <span className="emoji">{s.emoji}</span>
+              <span className="icon">
+                <SphereIcon id={s.id} size={22} />
+              </span>
               <span className="grow">
                 <strong>{s.name}</strong>
                 <small>
@@ -415,7 +425,7 @@ function Focus({
           <ul>
             {wins.map((s) => (
               <li key={s.id}>
-                {s.emoji} {state.spheres[s.id].didAnyway}
+                <SphereIcon id={s.id} size={16} className="inline" /> {state.spheres[s.id].didAnyway}
               </li>
             ))}
           </ul>
@@ -425,7 +435,7 @@ function Focus({
 
       <p className="intro">
         {focus.length === 0
-          ? 'Everything is either feeling great or set aside on purpose. Enjoy that. 🌤️'
+          ? 'Everything is either feeling great or set aside on purpose. Enjoy that.'
           : `Just ${focus.length === 1 ? 'this one' : `these ${focus.length}`}. Everything else can wait. Pick one tiny step — starting is the hard part.`}
       </p>
 
@@ -438,13 +448,15 @@ function Focus({
           return (
             <li key={f.id} className="focus-card" style={tint(s.color)}>
               <h3>
-                <span className="emoji">{s.emoji}</span> {i + 1}. {s.name}
+                <SphereIcon id={f.id} size={22} className="inline" /> {i + 1}. {s.name}
               </h3>
               <p className="why">
                 Feels {st.score}/10{why.length > 0 && <> and connects to {why.join(' & ')}</>}.
                 {st.energy > 0 && <> {st.energy} energy planned.</>}
               </p>
-              {st.notEnough && <p className="kind small-note">💛 {s.reframe}</p>}
+              {st.notEnough && <p className="kind small-note">
+                  <HeartHandshake size={16} className="inline" /> {s.reframe}
+                </p>}
               <ul className="tiny">
                 {/* rest step uses its own slot (3) so ticks don't jump between modes */}
                 {(small ? [[s.restStep, 3] as const] : s.tinySteps.map((t, k) => [t, k] as const)).map(([t, k]) => (
@@ -464,7 +476,8 @@ function Focus({
                   </li>
                 ))}
               </ul>
-              {done > 0 && <p className="cheer">✨ {done === 1 ? 'One step done. That counts.' : `${done} steps done. Look at you.`}</p>}
+              {done > 0 && <p className="cheer">
+                  <Sparkles size={16} className="inline" /> {done === 1 ? 'One step done. That counts.' : `${done} steps done. Look at you.`}</p>}
             </li>
           )
         })}
@@ -474,7 +487,13 @@ function Focus({
         <div className="resting">
           <h4>Resting on purpose</h4>
           <p>
-            {resting.map((s) => `${s.emoji} ${s.name}`).join(' · ')} — you chose to let {resting.length === 1 ? 'this' : 'these'} be
+            {resting.map((s, i) => (
+              <span key={s.id}>
+                {i > 0 && ' · '}
+                <SphereIcon id={s.id} size={16} className="inline" /> {s.name}
+              </span>
+            ))}{' '}
+            — you chose to let {resting.length === 1 ? 'this' : 'these'} be
             for now. That's a decision, not a failure.
           </p>
         </div>

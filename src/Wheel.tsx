@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import { SPHERES, type SphereId } from './data.ts'
+import { SphereIcon } from './icons.tsx'
 import { importance, type State } from './priority.ts'
 
 const C = 210
@@ -93,9 +94,7 @@ export function Wheel({ state, focus, active, onScore, onHover }: Props) {
               const [x, y] = xy(R + 9, a)
               return <circle key={k} cx={x} cy={y} r={3.2} fill={s.color} />
             })}
-            <text {...at(R + 32, mid)} className="slice-emoji">
-              {s.emoji}
-            </text>
+            <SphereIcon id={s.id} size={24} x={at(R + 32, mid).x - 12} y={at(R + 32, mid).y - 12} />
             {stars > 0 && (
               <text {...at(R + 50, mid)} className="slice-stars">
                 {'★'.repeat(stars)}
