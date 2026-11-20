@@ -24,7 +24,7 @@ export const ACTIVITIES: Activity[] = [
   { name: 'Sports, running, exercise', sphere: 'health', now: 8.12, note: 'A big lift now — and linked to extra years (see below).' },
   { name: 'Gardening', sphere: 'home', now: 7.83 },
   { name: 'Singing, performing', sphere: 'fun', now: 6.95, short: 'Singing', long: 1, note: 'Active and shared, so it lifts more than passive music.' },
-  { name: 'Talking in person', sphere: 'love', now: 6.38, short: 'Talking in person', long: 2, note: 'Harvard’s 80-year study: close relationships best predict health and happiness.', link: 'https://www.adultdevelopmentstudy.org' },
+  { name: 'Talking in person', sphere: 'love', now: 6.38, short: 'Talking in person', long: 2, note: 'Harvard’s 80-year study: close relationships best predict health and happiness. Hugs help too: they were linked to less stress-related illness (Cohen 2015).', link: 'https://www.adultdevelopmentstudy.org' },
   { name: 'Birdwatching, nature watching', sphere: 'mind', now: 6.28 },
   { name: 'Walking, hiking', sphere: 'health', now: 6.18 },
   { name: 'Fishing, hunting', sphere: 'fun', now: 5.82 },
