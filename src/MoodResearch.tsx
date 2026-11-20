@@ -12,6 +12,7 @@ type Plotted = Activity & { long: number; short: string }
 const PLOTTED = ACTIVITIES.filter((a): a is Plotted => a.long !== undefined && a.short !== undefined)
 
 type Sort = 'now' | 'long'
+const SHORT_LIST = 10
 
 const longTerm = (v: number) => (v >= 1.5 ? 'clearly good for you' : v > 0 ? 'a little good for you' : v === 0 ? 'neutral' : 'costs you later')
 const signed = (n: number) => `${n > 0 ? '+' : ''}${n.toFixed(1)}`
@@ -29,6 +30,7 @@ function load(): string[] {
 
 export function MoodResearch() {
   const [sort, setSort] = useState<Sort>('now')
+  const [showAll, setShowAll] = useState(false)
   const [doing, setDoing] = useState(load)
   useEffect(() => {
     try {
@@ -38,7 +40,9 @@ export function MoodResearch() {
     }
   }, [doing])
 
-  const rows = [...ACTIVITIES].sort((a, b) => sortKey(b, sort) - sortKey(a, sort))
+  const sorted = [...ACTIVITIES].sort((a, b) => sortKey(b, sort) - sortKey(a, sort))
+  // Collapsed list still keeps anything you ticked, so nothing you chose disappears.
+  const rows = showAll ? sorted : sorted.filter((a, i) => i < SHORT_LIST || doing.includes(a.name))
   const sum = moodSummary(doing)
   const toggle = (name: string, on: boolean) => setDoing((d) => (on ? [...d, name] : d.filter((n) => n !== name)))
   return (
@@ -49,6 +53,8 @@ export function MoodResearch() {
         to see what you already have and what's worth trying.
       </p>
 
+      {/* Wrapper bounds the sticky result box to the list, so it lets go before the scatter. */}
+      <div className="mood-picker">
       <div className="habit-result mood-result" aria-live="polite">
         {sum.average === undefined ? (
           <p>Nothing ticked yet.</p>
@@ -123,6 +129,12 @@ export function MoodResearch() {
           )
         })}
       </ul>
+      {sorted.length > SHORT_LIST && (
+        <button className="ghost small show-all" aria-expanded={showAll} onClick={() => setShowAll(!showAll)}>
+          {showAll ? 'Show fewer' : `Show all ${sorted.length} activities`}
+        </button>
+      )}
+      </div>
       <Scatter />
       <p className="support">
         Source:{' '}

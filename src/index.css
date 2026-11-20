@@ -844,3 +844,104 @@ input[type='checkbox'] {
   border-color: var(--accent);
   color: #fff;
 }
+
+/* ---- research page polish ---- */
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.tabs button {
+  display: grid;
+  gap: 2px;
+  padding: 12px 16px;
+  text-align: left;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card);
+  cursor: pointer;
+}
+.tabs button small {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.tabs button[aria-selected='true'] {
+  border-color: var(--accent);
+  box-shadow: inset 0 -3px 0 var(--accent);
+  background: var(--soft);
+}
+@media (max-width: 560px) {
+  .tabs {
+    grid-template-columns: 1fr;
+  }
+}
+#research-panel .research {
+  margin-top: 0;
+}
+
+/* Bars: a faint full-width track makes length comparable at a glance. */
+.bars .track {
+  height: 12px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--line) 55%, transparent);
+}
+.bars .bar {
+  border-radius: 6px;
+}
+.bars .later {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: color-mix(in srgb, var(--text) 70%, var(--muted));
+}
+.bars li {
+  padding: 6px 4px;
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 60%, transparent);
+}
+.bars li:last-child {
+  border-bottom: 0;
+}
+.bars {
+  gap: 2px;
+}
+.research > h3 {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+.research > h3:first-of-type {
+  border-top: 0;
+  padding-top: 0;
+  margin-top: 8px;
+}
+
+/* Keep the live result in view while ticking items further down. */
+.mood-result {
+  position: sticky;
+  top: 8px;
+  z-index: 2;
+  border: 1px solid var(--line);
+  box-shadow: 0 6px 18px rgb(0 0 0 / 0.12);
+  background: color-mix(in srgb, var(--soft) 92%, var(--card));
+}
+.show-all {
+  display: block;
+  margin: 10px auto 0;
+}
+.mood-bars input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+
+/* How you live: boxes size to their content instead of stretching. */
+.habit-form {
+  align-items: start;
+}
+.habit-form label {
+  padding: 4px 6px;
+  border-radius: 8px;
+}
+.habit-form label:has(input:checked) {
+  background: var(--soft);
+}

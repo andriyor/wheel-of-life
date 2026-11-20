@@ -16,9 +16,7 @@ import { HeartHandshake, Sparkles } from 'lucide-react'
 import { SphereIcon } from './icons.tsx'
 import { Wheel } from './Wheel.tsx'
 import { Tasks } from './Tasks.tsx'
-import { MoodResearch } from './MoodResearch.tsx'
-import { HabitsResearch } from './HabitsResearch.tsx'
-import { HowILive } from './HowILive.tsx'
+import { Research } from './Research.tsx'
 
 const KEY = 'wheel-of-life:v1'
 const byId = Object.fromEntries(SPHERES.map((s) => [s.id, s])) as Record<SphereId, Sphere>
@@ -93,11 +91,7 @@ export default function App() {
       </header>
 
       {research ? (
-        <>
-          <MoodResearch />
-          <HowILive />
-          <HabitsResearch />
-        </>
+        <Research />
       ) : (
         <>
           <Tasks state={state} setState={setState} />
