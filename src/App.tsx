@@ -17,6 +17,7 @@ import { SphereIcon } from './icons.tsx'
 import { Wheel } from './Wheel.tsx'
 import { Tasks } from './Tasks.tsx'
 import { MoodResearch } from './MoodResearch.tsx'
+import { HabitsResearch } from './HabitsResearch.tsx'
 
 const KEY = 'wheel-of-life:v1'
 const byId = Object.fromEntries(SPHERES.map((s) => [s.id, s])) as Record<SphereId, Sphere>
@@ -139,6 +140,7 @@ export default function App() {
       </main>
 
       <MoodResearch />
+      <HabitsResearch />
     </div>
   )
 }

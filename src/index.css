@@ -698,3 +698,7 @@ input[type='checkbox'] {
   fill: var(--muted);
   font-size: 12px;
 }
+.research > h3 {
+  margin: 16px 0 8px;
+  font-size: 1.05rem;
+}
