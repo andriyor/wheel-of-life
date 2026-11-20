@@ -69,7 +69,7 @@ function nextStep(h: Habits): string | undefined {
   if (h.drink) return 'Cutting down to under ~7 drinks a week is linked to 4–5 more years.'
   if (h.sitAllDay && h.exercise !== 'lots') return 'Your all-day sitting risk seemed to vanish with about an hour of brisk walking a day.'
   if (h.exercise === 'none') return 'Start small: even up to 75 minutes of brisk walking a week is linked to 1.8 more years — and better mood.'
-  if (h.isolated || h.lonely) return 'See someone in person this week. Being cut off is linked to about 30% higher risk of dying early.'
+  if (h.alone || h.isolated || h.lonely) return 'See someone in person this week. Being cut off is linked to about 30% higher risk of dying early.'
   if (h.sit || h.tv) return 'Stand up or walk for a few minutes every hour you sit, and swap some screen time for movement.'
   if (h.exercise !== 'lots') return 'Moving more pays off further: about an hour a day was linked to 4.5 extra years.'
   return undefined

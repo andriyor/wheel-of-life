@@ -25,3 +25,7 @@ test('an hour a day of movement cancels the all-day sitting risk', () => {
   assert.equal(active.next, undefined)
   assert.ok(active.moodLift)
 })
+
+test('living alone on its own still gets a next step', () => {
+  assert.match(habitResult({ ...noHabits(), alone: true, exercise: 'lots' }).next ?? '', /See someone/)
+})

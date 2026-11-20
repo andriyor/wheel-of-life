@@ -83,7 +83,7 @@ export function HowILive() {
                 {e.label}: {e.years !== undefined ? `${e.years > 0 ? '+' : '−'}${Math.abs(e.years)} years` : `+${e.risk}% risk of dying early`}
               </li>
             ))}
-            {r.moodLift && <li className="gain">Moving regularly: about 20% fewer bad mental-health days</li>}
+            {r.moodLift && <li className="gain">Better mood: about 20% fewer bad mental-health days</li>}
           </ul>
         )}
         <p className="next">
