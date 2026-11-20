@@ -777,3 +777,43 @@ input[type='checkbox'] {
 .habit-result .next {
   margin: 0 0 8px;
 }
+
+/* ---- interactive mood chart ---- */
+.sort {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 12px;
+  color: var(--muted);
+}
+.mood-bars li,
+.scatter g {
+  transition: opacity 0.2s;
+}
+.mood-bars li {
+  border-radius: 8px;
+  padding: 2px 4px;
+}
+.mood-bars li:not(.dim):hover {
+  background: var(--soft);
+}
+.mood-bars .dim,
+.scatter .dim {
+  opacity: 0.25;
+}
+.scatter g {
+  cursor: pointer;
+  outline: none;
+}
+.scatter g:focus-visible circle {
+  stroke: var(--accent);
+  stroke-width: 3;
+}
+.scatter circle {
+  transition: r 0.2s;
+}
+.scatter .detail {
+  min-height: 3em;
+  margin: 4px 0 8px;
+}

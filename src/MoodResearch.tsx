@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { SPHERES, type SphereId } from './data.ts'
 import { SphereIcon } from './icons.tsx'
 
@@ -21,19 +22,49 @@ const max = Math.max(...ACTIVITIES.map((a) => Math.abs(a.now)))
 const neg = Math.max(0, ...ACTIVITIES.map((a) => -a.now))
 const zero = (neg / (max + neg)) * 100 // % from left where 0 sits
 
+type Activity = (typeof ACTIVITIES)[number]
+type Sort = 'now' | 'long'
+
+const longTerm = (v: number) => (v >= 1.5 ? 'clearly good for you' : v > 0 ? 'a little good for you' : v === 0 ? 'neutral' : 'costs you later')
+const signed = (n: number) => `${n > 0 ? '+' : ''}${n.toFixed(1)}`
+
 export function MoodResearch() {
+  const [active, setActive] = useState<string>()
+  const [sort, setSort] = useState<Sort>('now')
+  const rows = [...ACTIVITIES].sort((a, b) => b[sort] - a[sort])
+  // Hover or keyboard focus on a bar or a dot highlights that activity in both charts.
+  const hl = (a: Activity) => ({
+    onMouseEnter: () => setActive(a.name),
+    onMouseLeave: () => setActive(undefined),
+    onFocus: () => setActive(a.name),
+    onBlur: () => setActive(undefined),
+    className: active && active !== a.name ? 'dim' : undefined,
+  })
   return (
     <section className="card research" aria-label="What lifts mood, according to research">
       <h2>What lifts mood in the moment</h2>
       <p className="intro">
         Happiness while doing each activity, compared to an average moment. Colours match the area of your wheel it
-        feeds. The grey note under each bar is the long-term picture.
+        feeds. The grey note under each bar is the long-term picture. Hover or tab through to compare both charts.
       </p>
-      <ul className="bars">
-        {ACTIVITIES.map((a) => {
+      <div className="sort" role="group" aria-label="Sort activities">
+        Sort by:
+        {(
+          [
+            ['now', 'Feels good now'],
+            ['long', 'Good for you later'],
+          ] as const
+        ).map(([id, label]) => (
+          <button key={id} className={sort === id ? 'primary small' : 'ghost small'} aria-pressed={sort === id} onClick={() => setSort(id)}>
+            {label}
+          </button>
+        ))}
+      </div>
+      <ul className="bars mood-bars">
+        {rows.map((a) => {
           const w = (Math.abs(a.now) / (max + neg)) * 100
           return (
-            <li key={a.name} style={{ '--c': color[a.sphere] } as React.CSSProperties}>
+            <li key={a.name} {...hl(a)} style={{ '--c': color[a.sphere] } as React.CSSProperties}>
               <span className="label">
                 <SphereIcon id={a.sphere} size={16} className="inline" /> {a.name}
               </span>
@@ -42,8 +73,7 @@ export function MoodResearch() {
                 <span className="bar" style={{ left: `${a.now < 0 ? zero - w : zero}%`, width: `${w}%` }} />
               </span>
               <span className="val">
-                {a.now > 0 ? '+' : ''}
-                {a.now.toFixed(1)}
+                {signed(a.now)}
               </span>
               <small className="later">
                 {a.later}{' '}
@@ -55,7 +85,7 @@ export function MoodResearch() {
           )
         })}
       </ul>
-      <Scatter />
+      <Scatter active={ACTIVITIES.find((a) => a.name === active)} hl={hl} />
       <p className="support">
         Source:{' '}
         <a href="https://dam.ukdataservice.ac.uk/media/605020/mackerron.pdf" target="_blank" rel="noreferrer">
@@ -72,7 +102,7 @@ export function MoodResearch() {
 }
 
 // x: mood right now (measured), y: long-term effect (rough rating). Quadrants show the tradeoff.
-function Scatter() {
+function Scatter({ active, hl }: { active?: Activity; hl: (a: Activity) => object }) {
   const W = 640, H = 380, P = 44
   const x = (v: number) => P + ((v + 7) / 23) * (W - 2 * P) // domain -7 … 16
   const y = (v: number) => H - P - ((v + 2.5) / 5) * (H - 2 * P) // domain -2.5 … 2.5
@@ -88,9 +118,8 @@ function Scatter() {
         <text className="axis-label" x={W - P} y={y(0) - 6} textAnchor="end">mood right now →</text>
         <text className="axis-label" x={x(0) + 6} y={P + 12}>↑ long-term</text>
         {ACTIVITIES.map((a) => (
-          <g key={a.name}>
-            <title>{`${a.name}: ${a.now > 0 ? '+' : ''}${a.now} now. ${a.later}`}</title>
-            <circle cx={x(a.now)} cy={y(a.long)} r={7} fill={color[a.sphere]} />
+          <g key={a.name} tabIndex={0} role="img" aria-label={`${a.name}: ${signed(a.now)} now, ${longTerm(a.long)}`} {...hl(a)}>
+            <circle cx={x(a.now)} cy={y(a.long)} r={active?.name === a.name ? 11 : 7} fill={color[a.sphere]} />
             {/* shortcut: one hand-placed label below to dodge an overlap; revisit if data changes */}
             <text className="point" x={x(a.now)} y={y(a.long) + (a.short === 'Singing' ? 22 : -12)} textAnchor="middle">
               {a.short}
@@ -98,6 +127,15 @@ function Scatter() {
           </g>
         ))}
       </svg>
+      <p className="detail" aria-live="polite">
+        {active ? (
+          <>
+            <strong>{active.name}</strong>: {signed(active.now)} mood right now, {longTerm(active.long)}. {active.later}
+          </>
+        ) : (
+          'Hover or tab to a dot to see its story.'
+        )}
+      </p>
       <figcaption className="support">
         Across: the measured mood change from the bars above. Up and down: a rough rating of what the linked study says
         happens over months and years — a summary, not a measured number.
