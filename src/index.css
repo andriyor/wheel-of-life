@@ -708,3 +708,72 @@ input[type='checkbox'] {
 .bars.bad .val {
   color: #d9645a;
 }
+
+/* ---- how I live ---- */
+.habit-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+}
+.habit-form fieldset {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 10px 14px;
+  margin: 0;
+  display: grid;
+  align-content: start;
+  gap: 6px;
+}
+.habit-form legend {
+  padding: 0 4px;
+  font-weight: 600;
+}
+.habit-form label {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  cursor: pointer;
+}
+.habit-result {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: var(--soft);
+}
+.habit-result .tally {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+.habit-result .gain {
+  color: #3f9c6f;
+}
+.habit-result .loss {
+  color: #d9645a;
+}
+.habit-result .split {
+  display: flex;
+  height: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--line);
+  margin: 6px 0 10px;
+}
+.habit-result .split span {
+  transition: width 0.3s;
+}
+.habit-result .split .gain {
+  background: #3f9c6f;
+}
+.habit-result .split .loss {
+  background: #d9645a;
+  margin-left: auto;
+}
+.habit-result ul {
+  margin: 0 0 10px;
+  padding-left: 1.2em;
+}
+.habit-result .next {
+  margin: 0 0 8px;
+}
