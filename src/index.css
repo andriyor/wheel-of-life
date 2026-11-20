@@ -817,3 +817,21 @@ input[type='checkbox'] {
   min-height: 3em;
   margin: 4px 0 8px;
 }
+.mood-bars label.label {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  cursor: pointer;
+}
+.mood-bars li[data-on] .label {
+  font-weight: 600;
+}
+.mood-result {
+  margin: 0 0 14px;
+}
+.mood-result p {
+  margin: 0 0 6px;
+}
+.mood-result p:last-child {
+  margin: 0;
+}
