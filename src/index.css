@@ -824,3 +824,23 @@ input[type='checkbox'] {
 .mood-result p:last-child {
   margin: 0;
 }
+
+/* ---- page switcher ---- */
+.pages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.pages a {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--text);
+  text-decoration: none;
+}
+.pages a[aria-current] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}

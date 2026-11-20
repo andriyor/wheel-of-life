@@ -44,6 +44,17 @@ export default function App() {
   const [state, setState] = useState(load)
   const [step, setStep] = useState(0)
   const [hover, setHover] = useState<SphereId>()
+  // Hash routing: works on static hosting with no server config.
+  const [page, setPage] = useState(() => location.hash)
+  useEffect(() => {
+    const onHash = () => {
+      setPage(location.hash)
+      window.scrollTo(0, 0)
+    }
+    window.addEventListener('hashchange', onHash)
+    return () => window.removeEventListener('hashchange', onHash)
+  }, [])
+  const research = page === '#research'
 
   useEffect(() => {
     try {
@@ -65,84 +76,99 @@ export default function App() {
   return (
     <div className="app">
       <header>
-        <h1>Wheel of Life</h1>
+        <nav className="pages" aria-label="Pages">
+          <a href="#" aria-current={research ? undefined : 'page'}>
+            My wheel
+          </a>
+          <a href="#research" aria-current={research ? 'page' : undefined}>
+            What the research says
+          </a>
+        </nav>
+        <h1>{research ? 'What the research says' : 'Wheel of Life'}</h1>
         <p className="lede">
-          A gentle check-in. You can't pour into every area at once — and you don't have to. Let's find the one or two
-          that matter most right now.
+          {research
+            ? 'What lifts mood in the moment, and which habits add or take away years — from large studies of real people. Tick what fits your life.'
+            : "A gentle check-in. You can't pour into every area at once — and you don't have to. Let's find the one or two that matter most right now."}
         </p>
       </header>
 
-      <Tasks state={state} setState={setState} />
+      {research ? (
+        <>
+          <MoodResearch />
+          <HowILive />
+          <HabitsResearch />
+        </>
+      ) : (
+        <>
+          <Tasks state={state} setState={setState} />
 
-      <main>
-        <section className="card wheel-card" aria-label="Your wheel">
-          <Wheel state={state} focus={focusIds} active={hover} onScore={(id, score) => update(id, { score })} onHover={setHover} />
-          <p className="hint" aria-live="polite">
-            {hover ? (
-              <>
-                <SphereIcon id={hover} size={18} className="inline" /> <strong>{byId[hover].name}</strong> feels {feeling(state.spheres[hover].score)} (
-                {state.spheres[hover].score}/10)
-              </>
-            ) : (
-              'Tap or drag a slice to change it. Bumpy is normal — no wheel is perfectly round.'
-            )}
-          </p>
-          <ul className="legend">
-            <li>
-              <span className="swatch dashed" /> focus
-            </li>
-            <li>★ matters to you</li>
-            <li>● energy this week</li>
-            <li>
-              <span className="swatch faded" /> letting go
-            </li>
-          </ul>
-        </section>
+          <main>
+            <section className="card wheel-card" aria-label="Your wheel">
+              <Wheel state={state} focus={focusIds} active={hover} onScore={(id, score) => update(id, { score })} onHover={setHover} />
+              <p className="hint" aria-live="polite">
+                {hover ? (
+                  <>
+                    <SphereIcon id={hover} size={18} className="inline" /> <strong>{byId[hover].name}</strong> feels {feeling(state.spheres[hover].score)} (
+                    {state.spheres[hover].score}/10)
+                  </>
+                ) : (
+                  'Tap or drag a slice to change it. Bumpy is normal — no wheel is perfectly round.'
+                )}
+              </p>
+              <ul className="legend">
+                <li>
+                  <span className="swatch dashed" /> focus
+                </li>
+                <li>★ matters to you</li>
+                <li>● energy this week</li>
+                <li>
+                  <span className="swatch faded" /> letting go
+                </li>
+              </ul>
+            </section>
 
-        <section className="card panel">
-          <nav className="steps" aria-label="Steps">
-            {STEPS.map((label, i) => (
-              <button key={label} aria-current={i === step ? 'step' : undefined} onClick={() => setStep(i)}>
-                <span className="num">{i + 1}</span> {label}
-              </button>
-            ))}
-          </nav>
+            <section className="card panel">
+              <nav className="steps" aria-label="Steps">
+                {STEPS.map((label, i) => (
+                  <button key={label} aria-current={i === step ? 'step' : undefined} onClick={() => setStep(i)}>
+                    <span className="num">{i + 1}</span> {label}
+                  </button>
+                ))}
+              </nav>
 
-          {step === 0 && <CheckIn state={state} update={update} onHover={setHover} setLowEnergy={setLowEnergy} />}
-          {step === 1 && <Values state={state} setState={setState} />}
-          {step === 2 && <Tradeoffs state={state} update={update} focus={focusIds} onHover={setHover} setLowEnergy={setLowEnergy} />}
-          {step === 3 && <Focus state={state} update={update} focus={focus} heavy={heavy} />}
+              {step === 0 && <CheckIn state={state} update={update} onHover={setHover} setLowEnergy={setLowEnergy} />}
+              {step === 1 && <Values state={state} setState={setState} />}
+              {step === 2 && <Tradeoffs state={state} update={update} focus={focusIds} onHover={setHover} setLowEnergy={setLowEnergy} />}
+              {step === 3 && <Focus state={state} update={update} focus={focus} heavy={heavy} />}
 
-          <footer className="panel-nav">
-            {step > 0 && (
-              <button className="ghost" onClick={() => setStep(step - 1)}>
-                ← Back
-              </button>
-            )}
-            {step < STEPS.length - 1 ? (
-              <button className="primary" onClick={() => setStep(step + 1)}>
-                Next: {STEPS[step + 1]} →
-              </button>
-            ) : (
-              <button
-                className="ghost"
-                onClick={() => {
-                  if (confirm('Start a fresh check-in? This clears your answers (tasks stay).')) {
-                    setState((s) => ({ ...initialState(), tasks: s.tasks }))
-                    setStep(0)
-                  }
-                }}
-              >
-                Start fresh
-              </button>
-            )}
-          </footer>
-        </section>
-      </main>
-
-      <MoodResearch />
-      <HowILive />
-      <HabitsResearch />
+              <footer className="panel-nav">
+                {step > 0 && (
+                  <button className="ghost" onClick={() => setStep(step - 1)}>
+                    ← Back
+                  </button>
+                )}
+                {step < STEPS.length - 1 ? (
+                  <button className="primary" onClick={() => setStep(step + 1)}>
+                    Next: {STEPS[step + 1]} →
+                  </button>
+                ) : (
+                  <button
+                    className="ghost"
+                    onClick={() => {
+                      if (confirm('Start a fresh check-in? This clears your answers (tasks stay).')) {
+                        setState((s) => ({ ...initialState(), tasks: s.tasks }))
+                        setStep(0)
+                      }
+                    }}
+                  >
+                    Start fresh
+                  </button>
+                )}
+              </footer>
+            </section>
+          </main>
+        </>
+      )}
     </div>
   )
 }
