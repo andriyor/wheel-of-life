@@ -29,3 +29,10 @@ test('an hour a day of movement cancels the all-day sitting risk', () => {
 test('living alone on its own still gets a next step', () => {
   assert.match(habitResult({ ...noHabits(), alone: true, exercise: 'lots' }).next ?? '', /See someone/)
 })
+
+test('hugs show as a plain-language help, not years', () => {
+  const r = habitResult({ ...noHabits(), hugs: true })
+  const hug = r.effects.find((e) => e.label === 'Hugs and affection')
+  assert.ok(hug?.note && hug.years === undefined && hug.risk === undefined)
+  assert.equal(r.gained, 0)
+})

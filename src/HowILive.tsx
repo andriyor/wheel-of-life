@@ -28,6 +28,7 @@ const CHECKS: [Exclude<keyof Habits, 'exercise'>, string][] = [
   ['isolated', 'I rarely see people in person'],
   ['lonely', 'I often feel lonely'],
   ['read', 'I read books'],
+  ['hugs', 'I get hugs or physical affection most days'],
 ]
 
 export function HowILive() {
@@ -79,8 +80,13 @@ export function HowILive() {
         {r.effects.length > 0 && (
           <ul>
             {r.effects.map((e) => (
-              <li key={e.label} className={(e.years ?? -1) < 0 ? 'loss' : 'gain'}>
-                {e.label}: {e.years !== undefined ? `${e.years > 0 ? '+' : '−'}${Math.abs(e.years)} years` : `+${e.risk}% risk of dying early`}
+              <li key={e.label} className={(e.years ?? 0) < 0 || e.risk ? 'loss' : 'gain'}>
+                {e.label}:{' '}
+                {e.years !== undefined
+                  ? `${e.years > 0 ? '+' : '−'}${Math.abs(e.years)} years`
+                  : e.risk !== undefined
+                    ? `+${e.risk}% risk of dying early`
+                    : e.note}
               </li>
             ))}
             {r.moodLift && <li className="gain">Better mood: about 20% fewer bad mental-health days</li>}

@@ -10,6 +10,7 @@ export type Habits = {
   tv: boolean // 2+ h a day
   sitAllDay: boolean // 8+ h a day and barely moving
   read: boolean
+  hugs: boolean // hugs or physical affection most days
   alone: boolean
   isolated: boolean
   lonely: boolean
@@ -23,6 +24,7 @@ export const noHabits = (): Habits => ({
   tv: false,
   sitAllDay: false,
   read: false,
+  hugs: false,
   alone: false,
   isolated: false,
   lonely: false,
@@ -31,7 +33,8 @@ export const noHabits = (): Habits => ({
 // Years vs. no leisure exercise (Moore 2012).
 export const EXERCISE_YEARS: Record<Exercise, number> = { none: 0, little: 1.8, some: 3.4, lots: 4.5 }
 
-export type Effect = { label: string; years?: number; risk?: number }
+// A study without a years/risk number gets a plain-language `note` instead.
+export type Effect = { label: string; years?: number; risk?: number; note?: string }
 
 export type Result = {
   gained: number
@@ -55,6 +58,8 @@ export function habitResult(h: Habits): Result {
   if (h.lonely) effects.push({ label: 'Feeling lonely', risk: 26 })
   if (h.exercise !== 'none') effects.push({ label: 'Moving regularly', years: EXERCISE_YEARS[h.exercise] })
   if (h.read) effects.push({ label: 'Reading books', years: 1.9 })
+  // Cohen 2015: hugs explained about a third of social support's protection against stress-related colds.
+  if (h.hugs) effects.push({ label: 'Hugs and affection', note: 'linked to less stress-related illness, and milder colds' })
 
   const years = effects.map((e) => e.years ?? 0)
   const gained = round(years.filter((y) => y > 0).reduce((a, b) => a + b, 0))
