@@ -924,10 +924,6 @@ input[type='checkbox'] {
   box-shadow: 0 6px 18px rgb(0 0 0 / 0.12);
   background: color-mix(in srgb, var(--soft) 92%, var(--card));
 }
-.show-all {
-  display: block;
-  margin: 10px auto 0;
-}
 .mood-bars input[type='checkbox'] {
   width: 18px;
   height: 18px;
