@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { SPHERES, type SphereId } from './data.ts'
 import { SphereIcon } from './icons.tsx'
-import { ACTIVITIES, linkOf, moodSummary, type Activity } from './mood.ts'
+import { ACTIVITIES, linkOf, moodSummary, standIns, type Activity } from './mood.ts'
 
 const KEY = 'wheel-of-life:doing'
 const color = Object.fromEntries(SPHERES.map((s) => [s.id, s.color])) as Record<SphereId, string>
@@ -48,6 +48,8 @@ export function MoodResearch() {
         Happiness while doing each activity, compared to an average moment. <strong>Tick what you do in a normal week</strong>{' '}
         to see what you already have and what's worth trying.
       </p>
+
+      <MissingSomething />
 
       {/* Wrapper bounds the sticky result box to the list, so it lets go before the scatter. */}
       <div className="mood-picker">
@@ -184,5 +186,51 @@ function Scatter() {
         happens over months and years — a summary, not a measured number.
       </figcaption>
     </figure>
+  )
+}
+
+const MISSABLE = ACTIVITIES.filter((a) => a.gives?.length)
+
+// "I can't have X right now" → what X gives you, and what else gives the same.
+function MissingSomething() {
+  const [missing, setMissing] = useState('')
+  const needs = standIns(missing)
+  return (
+    <div className="missing">
+      <label>
+        <strong>Missing something?</strong> Pick what you can't or don't do right now:{' '}
+        <select value={missing} onChange={(e) => setMissing(e.target.value)}>
+          <option value="">Choose…</option>
+          {MISSABLE.map((a) => (
+            <option key={a.name}>{a.name}</option>
+          ))}
+        </select>
+      </label>
+      {needs.length > 0 && (
+        <>
+          <p className="intro">No single thing replaces it, but you can cover what it gives you:</p>
+          <ul>
+            {needs.map((n) => (
+              <li key={n.need}>
+                <strong>{n.label}</strong> →{' '}
+                {n.options.map((a, i) => (
+                  <span key={a.name}>
+                    {i > 0 && ' or '}
+                    <span style={{ color: color[a.sphere] }}>●</span> {a.name.toLowerCase()} ({signed(a.now)})
+                  </span>
+                ))}
+                {n.tip && (
+                  <>
+                    {n.options.length > 0 && '; '}
+                    <span className="muted">{n.tip}</span>
+                  </>
+                )}
+              </li>
+            ))}
+          </ul>
+          <p className="support">Which activity meets which need is our own grouping, not part of the study.</p>
+        </>
+      )}
+    </div>
   )
 }

@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { moodSummary } from '../src/mood.ts'
+import { moodSummary, standIns } from '../src/mood.ts'
 
 test('nothing ticked: no average, suggests the top safe lifts', () => {
   const s = moodSummary([])
@@ -18,4 +18,19 @@ test('averages what you do and never suggests alcohol, gambling or work', () => 
   assert.ok(s.alcohol)
   const all = moodSummary(['Dancing, theatre, concert', 'Museum, exhibition, library', 'Sports, running, exercise', 'Gardening', 'Singing, performing', 'Talking in person', 'Birdwatching, nature watching', 'Walking, hiking', 'Fishing, hunting', 'Hobbies, arts, crafts', 'Meditating, religious activities', 'Watching a sports match', 'Playing with children', 'Playing with pets', 'Listening to music', 'Games, puzzles', 'Shopping, errands', 'Watching TV, films', 'Computer, phone games', 'Eating, snacking', 'Cooking', 'Reading', 'Texting, email, social media'])
   assert.deepEqual(all.tryNext, [])
+})
+
+test('missing sex: stand-ins per need, touch gets a tip, never alcohol', () => {
+  const s = standIns('Sex, intimacy')
+  assert.deepEqual(
+    s.map((n) => [n.need, n.options.map((a) => a.name)]),
+    [
+      ['closeness', ['Talking in person', 'Playing with children']],
+      ['touch', ['Playing with pets']],
+      ['body', ['Sports, running, exercise', 'Gardening']],
+    ],
+  )
+  assert.ok(s[1].tip)
+  assert.ok(standIns('Drinking alcohol').every((n) => n.options.every((a) => a.suggest !== false)))
+  assert.deepEqual(standIns('Cooking'), [])
 })
