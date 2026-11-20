@@ -28,7 +28,6 @@ function load(): string[] {
 }
 
 export function MoodResearch() {
-  const [active, setActive] = useState<string>()
   const [sort, setSort] = useState<Sort>('now')
   const [doing, setDoing] = useState(load)
   useEffect(() => {
@@ -42,14 +41,6 @@ export function MoodResearch() {
   const rows = [...ACTIVITIES].sort((a, b) => sortKey(b, sort) - sortKey(a, sort))
   const sum = moodSummary(doing)
   const toggle = (name: string, on: boolean) => setDoing((d) => (on ? [...d, name] : d.filter((n) => n !== name)))
-  // Hover or keyboard focus on a bar or a dot highlights that activity in both charts.
-  const hl = (a: Activity) => ({
-    onMouseEnter: () => setActive(a.name),
-    onMouseLeave: () => setActive(undefined),
-    onFocus: () => setActive(a.name),
-    onBlur: () => setActive(undefined),
-    className: active && active !== a.name ? 'dim' : undefined,
-  })
   return (
     <section className="card research" aria-label="What lifts mood, according to research">
       <h2>What lifts mood in the moment</h2>
@@ -110,7 +101,7 @@ export function MoodResearch() {
           const w = (Math.abs(a.now) / (max + neg)) * 100
           const on = doing.includes(a.name)
           return (
-            <li key={a.name} {...hl(a)} data-on={on || undefined} style={{ '--c': color[a.sphere] } as React.CSSProperties}>
+            <li key={a.name} data-on={on || undefined} style={{ '--c': color[a.sphere] } as React.CSSProperties}>
               <label className="label">
                 <input type="checkbox" checked={on} onChange={(e) => toggle(a.name, e.target.checked)} />
                 <SphereIcon id={a.sphere} size={16} className="inline" /> {a.name}
@@ -132,7 +123,7 @@ export function MoodResearch() {
           )
         })}
       </ul>
-      <Scatter active={PLOTTED.find((a) => a.name === active)} hl={hl} />
+      <Scatter />
       <p className="support">
         Source:{' '}
         <a href="https://dam.ukdataservice.ac.uk/media/605020/mackerron.pdf" target="_blank" rel="noreferrer">
@@ -149,7 +140,9 @@ export function MoodResearch() {
 }
 
 // x: mood right now (measured), y: long-term effect (rough rating). Quadrants show the tradeoff.
-function Scatter({ active, hl }: { active?: Plotted; hl: (a: Activity) => object }) {
+function Scatter() {
+  const [picked, setPicked] = useState<string>()
+  const active = PLOTTED.find((a) => a.name === picked)
   const W = 640, H = 380, P = 44
   const x = (v: number) => P + ((v + 7) / 23) * (W - 2 * P) // domain -7 … 16
   const y = (v: number) => H - P - ((v + 2.5) / 5) * (H - 2 * P) // domain -2.5 … 2.5
@@ -165,7 +158,7 @@ function Scatter({ active, hl }: { active?: Plotted; hl: (a: Activity) => object
         <text className="axis-label" x={W - P} y={y(0) - 6} textAnchor="end">mood right now →</text>
         <text className="axis-label" x={x(0) + 6} y={P + 12}>↑ long-term</text>
         {PLOTTED.map((a) => (
-          <g key={a.name} tabIndex={0} role="img" aria-label={`${a.name}: ${signed(a.now)} now, ${longTerm(a.long)}`} {...hl(a)}>
+          <g key={a.name} tabIndex={0} role="img" aria-label={`${a.name}: ${signed(a.now)} now, ${longTerm(a.long)}`} onClick={() => setPicked(a.name)} onFocus={() => setPicked(a.name)}>
             <circle cx={x(a.now)} cy={y(a.long)} r={active?.name === a.name ? 11 : 7} fill={color[a.sphere]} />
             {/* shortcut: one hand-placed label below to dodge an overlap; revisit if data changes */}
             <text className="point" x={x(a.now)} y={y(a.long) + (a.short === 'Singing' ? 22 : -12)} textAnchor="middle">
@@ -180,7 +173,7 @@ function Scatter({ active, hl }: { active?: Plotted; hl: (a: Activity) => object
             <strong>{active.name}</strong>: {signed(active.now)} mood right now, {longTerm(active.long)}. {active.note}
           </>
         ) : (
-          'Hover or tab to a dot to see its story.'
+          'Click or tab to a dot to see its story.'
         )}
       </p>
       <figcaption className="support">

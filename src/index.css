@@ -787,20 +787,9 @@ input[type='checkbox'] {
   margin-bottom: 12px;
   color: var(--muted);
 }
-.mood-bars li,
-.scatter g {
-  transition: opacity 0.2s;
-}
 .mood-bars li {
   border-radius: 8px;
   padding: 2px 4px;
-}
-.mood-bars li:not(.dim):hover {
-  background: var(--soft);
-}
-.mood-bars .dim,
-.scatter .dim {
-  opacity: 0.25;
 }
 .scatter g {
   cursor: pointer;
