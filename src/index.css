@@ -702,3 +702,9 @@ input[type='checkbox'] {
   margin: 16px 0 8px;
   font-size: 1.05rem;
 }
+.bars.bad .bar {
+  background: #d9645a;
+}
+.bars.bad .val {
+  color: #d9645a;
+}
