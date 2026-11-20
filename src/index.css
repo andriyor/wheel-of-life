@@ -941,3 +941,59 @@ input[type='checkbox'] {
 .habit-form label:has(input:checked) {
   background: var(--soft);
 }
+
+/* ---- personality ---- */
+.tabs {
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+.traits {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.traits li {
+  display: grid;
+  grid-template-columns: minmax(140px, 180px) 1fr;
+  gap: 12px;
+}
+.type-input {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.type-input select {
+  font: inherit;
+  color: inherit;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 6px 10px;
+}
+.personality {
+  margin: 0 0 14px;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.personality details {
+  margin-top: 10px;
+}
+.personality summary {
+  cursor: pointer;
+  color: var(--accent);
+}
+.personality .traits {
+  margin-top: 10px;
+}
+.personality h3 {
+  margin: 12px 0 6px;
+  font-size: 1.05rem;
+}
+.trait-tips {
+  margin: 0 0 10px;
+  padding-left: 1.2em;
+  display: grid;
+  gap: 6px;
+}

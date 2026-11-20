@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { SPHERES, type SphereId } from './data.ts'
 import { SphereIcon } from './icons.tsx'
 import { ACTIVITIES, linkOf, moodSummary, type Activity } from './mood.ts'
+import { TYPE_KEY, fitsYou, loadType, parseType } from './personality.ts'
+import { Personality } from './Personality.tsx'
 
 const KEY = 'wheel-of-life:doing'
 const color = Object.fromEntries(SPHERES.map((s) => [s.id, s.color])) as Record<SphereId, string>
@@ -40,6 +42,16 @@ export function MoodResearch() {
 
   const rows = [...ACTIVITIES].sort((a, b) => sortKey(b, sort) - sortKey(a, sort))
   const sum = moodSummary(doing)
+  const [type, setType] = useState(loadType)
+  useEffect(() => {
+    try {
+      localStorage.setItem(TYPE_KEY, type)
+    } catch {
+      /* storage blocked: still works for this visit */
+    }
+  }, [type])
+  const profile = parseType(type)
+  const fits = profile ? ACTIVITIES.filter((a) => fitsYou(profile).includes(a.name)) : []
   const toggle = (name: string, on: boolean) => setDoing((d) => (on ? [...d, name] : d.filter((n) => n !== name)))
   return (
     <section className="card research" aria-label="What lifts mood, according to research">
@@ -48,6 +60,8 @@ export function MoodResearch() {
         Happiness while doing each activity, compared to an average moment. <strong>Tick what you do in a normal week</strong>{' '}
         to see what you already have and what's worth trying.
       </p>
+
+      <Personality type={type} setType={setType} />
 
       {/* Wrapper bounds the sticky result box to the list, so it lets go before the scatter. */}
       <div className="mood-picker">
@@ -72,6 +86,18 @@ export function MoodResearch() {
               <span key={a.name}>
                 {i > 0 && ', '}
                 {a.name.toLowerCase()} ({signed(a.now)})
+              </span>
+            ))}
+            .
+          </p>
+        )}
+        {fits.length > 0 && (
+          <p>
+            <strong>Fits your {type.trim().toUpperCase()} type:</strong>{' '}
+            {fits.map((a, i) => (
+              <span key={a.name}>
+                {i > 0 && ', '}
+                {a.name.toLowerCase()} ({signed(a.now)}){doing.includes(a.name) && ' ✓'}
               </span>
             ))}
             .
