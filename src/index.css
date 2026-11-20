@@ -673,3 +673,28 @@ input[type='checkbox'] {
   color: var(--accent);
   white-space: nowrap;
 }
+.scatter {
+  margin: 20px 0 12px;
+}
+.scatter h3 {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+}
+.scatter svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.scatter .axis {
+  stroke: var(--muted);
+  stroke-width: 1;
+}
+.scatter text {
+  fill: var(--text);
+  font-size: 13px;
+}
+.scatter .quad,
+.scatter .axis-label {
+  fill: var(--muted);
+  font-size: 12px;
+}
