@@ -47,6 +47,25 @@ export function SocialConnection() {
           time alone leaves you restored or more stuck and disconnected; either way, treat that as information,
           not a reason to judge yourself.
         </p>
+        <figure className="burnout-cycle" aria-labelledby="overload-cycle-caption">
+          <svg className="burnout-arrows" viewBox="0 0 500 500" aria-hidden="true">
+            <defs>
+              <marker id="burnout-arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                <path d="M0 0 L7 4 L0 8" fill="none" stroke="currentColor" strokeWidth="1.5" />
+              </marker>
+            </defs>
+            <path d="M340 105 C375 115 390 150 400 190" />
+            <path d="M400 310 C390 350 375 385 340 400" />
+            <path d="M160 400 C125 385 110 350 100 310" />
+            <path d="M100 190 C110 150 125 115 160 105" />
+          </svg>
+          <div className="burnout-node burnout-top"><span>1</span><strong>Ideas & tasks pile up</strong></div>
+          <div className="burnout-node burnout-right"><span>2</span><strong>Pull back to focus</strong></div>
+          <div className="burnout-node burnout-bottom"><span>3</span><strong>Connection gets postponed</strong></div>
+          <div className="burnout-node burnout-left"><span>4</span><strong>Energy drops; tasks remain</strong></div>
+          <div className="burnout-center">the overload loop</div>
+          <figcaption id="overload-cycle-caption">When the list never feels finished, withdrawal can feed the exhaustion that makes it harder to reconnect.</figcaption>
+        </figure>
       </div>
 
       <h3>Want a low-pressure starting point?</h3>

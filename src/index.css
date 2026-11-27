@@ -936,6 +936,101 @@ input[type='checkbox'] {
 .sources a {
   color: var(--accent);
 }
+.burnout-cycle {
+  position: relative;
+  width: min(100%, 520px);
+  aspect-ratio: 1;
+  margin: 22px auto 4px;
+  color: #82739f;
+}
+.burnout-arrows {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.burnout-arrows path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 8 7;
+  marker-end: url(#burnout-arrowhead);
+}
+.burnout-node {
+  position: absolute;
+  z-index: 1;
+  width: 36%;
+  min-height: 22%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  padding: 10px;
+  border: 2px solid #8375a5;
+  border-radius: 17px 13px 19px 12px;
+  background: color-mix(in srgb, var(--card) 92%, #dcd5f4);
+  box-shadow: 2px 3px 0 color-mix(in srgb, #8375a5 35%, transparent);
+  transform: translate(-50%, -50%) rotate(-1deg);
+  color: var(--text);
+  font-family: 'Comic Sans MS', 'Chalkboard SE', ui-rounded, sans-serif;
+  line-height: 1.25;
+  text-align: center;
+}
+.burnout-node:nth-of-type(3n) {
+  transform: translate(-50%, -50%) rotate(1deg);
+}
+.burnout-node span {
+  display: grid;
+  place-items: center;
+  width: 25px;
+  height: 25px;
+  border: 1.5px solid #8375a5;
+  border-radius: 50% 44% 52% 46%;
+  color: #6c5d91;
+  font-weight: 700;
+}
+.burnout-top {
+  top: 13%;
+  left: 50%;
+}
+.burnout-right {
+  top: 50%;
+  left: 82%;
+  transform: translate(-50%, -50%) rotate(1deg);
+}
+.burnout-bottom {
+  top: 87%;
+  left: 50%;
+}
+.burnout-left {
+  top: 50%;
+  left: 18%;
+  transform: translate(-50%, -50%) rotate(1deg);
+}
+.burnout-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 25%;
+  padding: 10px 6px;
+  border: 1.5px dashed #a79abc;
+  border-radius: 48% 52% 46% 54%;
+  color: #6c5d91;
+  font-family: 'Comic Sans MS', 'Chalkboard SE', ui-rounded, sans-serif;
+  font-size: 0.88rem;
+  line-height: 1.2;
+  text-align: center;
+  transform: translate(-50%, -50%) rotate(-3deg);
+}
+.burnout-cycle figcaption {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  text-align: center;
+}
 
 /* Bars: a faint full-width track makes length comparable at a glance. */
 .bars .track {
