@@ -28,6 +28,16 @@ export function TimeAwareness() {
         {CYCLE.map(([title, description]) => <li key={title}><strong>{title}:</strong> {description}</li>)}
       </ol>
 
+      <div className="connection-note">
+        <strong>Numbers are a record you made, not an objective verdict.</strong>
+        <p>
+          You choose what to track and how to label it, so the picture is always partial. Time is a resource,
+          not proof of progress: hours spent on a goal do not guarantee the approach is working. If setting up
+          timers and reports starts replacing the activity itself, simplify or stop. Sometimes the useful next
+          step is just to begin.
+        </p>
+      </div>
+
       <p className="support">
         Track only activities you want to understand, such as focused work, learning, movement, a hobby, or
         meaningful social time. Skip the rest of the day, don’t make up missed hours, and use your own baseline
