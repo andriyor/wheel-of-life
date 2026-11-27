@@ -24,6 +24,16 @@ export function SocialConnection() {
         </p>
       </div>
 
+      <div className="connection-note">
+        <strong>Connection does not have to be useful to be worthwhile.</strong>
+        <p>
+          When your attention is on goals and tasks, a conversation can seem like time away from progress.
+          But sharing a walk, a joke, music, or a quiet moment can matter for the experience itself. Feeling
+          understood, getting another perspective, and being part of someone’s day are not tasks to complete.
+        </p>
+        <p><em>Would this interaction still feel worthwhile if it accomplished nothing?</em></p>
+      </div>
+
       <h3>Want a low-pressure starting point?</h3>
       <ul>
         {IDEAS.map((idea) => <li key={idea}>{idea}</li>)}
