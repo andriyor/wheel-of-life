@@ -63,7 +63,7 @@ export const SPHERES: Sphere[] = [
     id: 'love',
     name: 'Friends & love',
     color: '#e07a9a',
-    question: 'How connected do you feel to the people you care about?',
+    question: 'How connected do you feel to friends, family, and the people around you?',
     reframe: "You don't have to be perfect to be loved. Showing up imperfectly is enough.",
     restStep: "Send one emoji to someone you like",
     tinySteps: ['Send one “thinking of you” message', 'Reply to a message you have been avoiding', 'Plan one short call this week'],

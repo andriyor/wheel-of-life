@@ -2,11 +2,13 @@ import { useState } from 'react'
 import { MoodResearch } from './MoodResearch.tsx'
 import { HowILive } from './HowILive.tsx'
 import { HabitsResearch } from './HabitsResearch.tsx'
+import { SocialConnection } from './SocialConnection.tsx'
 
 const TABS = [
   { id: 'mood', label: 'What lifts mood', hint: 'right now', Panel: MoodResearch },
   { id: 'life', label: 'How you live', hint: 'your read-out', Panel: HowILive },
   { id: 'years', label: 'Years & risk', hint: 'the evidence', Panel: HabitsResearch },
+  { id: 'connection', label: 'Social connection', hint: 'small steps', Panel: SocialConnection },
 ] as const
 
 // One topic at a time instead of one very long scroll.

@@ -879,6 +879,21 @@ input[type='checkbox'] {
 #research-panel .research {
   margin-top: 0;
 }
+.connection-note {
+  margin: 16px 0;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--soft);
+}
+.connection-note p {
+  margin: 6px 0 0;
+}
+.social-connection ul {
+  padding-left: 1.3em;
+}
+.social-connection li + li {
+  margin-top: 6px;
+}
 
 /* Bars: a faint full-width track makes length comparable at a glance. */
 .bars .track {
