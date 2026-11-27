@@ -3,12 +3,13 @@ import { MoodResearch } from './MoodResearch.tsx'
 import { HowILive } from './HowILive.tsx'
 import { HabitsResearch } from './HabitsResearch.tsx'
 import { SocialConnection } from './SocialConnection.tsx'
+import { Activity, HeartHandshake, Sparkles, TrendingUp } from 'lucide-react'
 
 const TABS = [
-  { id: 'mood', label: 'What lifts mood', hint: 'right now', Panel: MoodResearch },
-  { id: 'life', label: 'How you live', hint: 'your read-out', Panel: HowILive },
-  { id: 'years', label: 'Years & risk', hint: 'the evidence', Panel: HabitsResearch },
-  { id: 'connection', label: 'Social connection', hint: 'small steps', Panel: SocialConnection },
+  { id: 'mood', label: 'What lifts mood', hint: 'right now', Icon: Sparkles, Panel: MoodResearch },
+  { id: 'life', label: 'How you live', hint: 'your read-out', Icon: Activity, Panel: HowILive },
+  { id: 'years', label: 'Years & risk', hint: 'the evidence', Icon: TrendingUp, Panel: HabitsResearch },
+  { id: 'connection', label: 'Social connection', hint: 'small steps', Icon: HeartHandshake, Panel: SocialConnection },
 ] as const
 
 // One topic at a time instead of one very long scroll.
@@ -27,7 +28,7 @@ export function Research() {
             aria-controls="research-panel"
             onClick={() => setTab(t.id)}
           >
-            <strong>{t.label}</strong>
+            <strong><t.Icon size={18} aria-hidden="true" /> {t.label}</strong>
             <small>{t.hint}</small>
           </button>
         ))}
