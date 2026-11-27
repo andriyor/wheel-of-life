@@ -34,6 +34,21 @@ export function SocialConnection() {
         <p><em>Would this interaction still feel worthwhile if it accomplished nothing?</em></p>
       </div>
 
+      <div className="connection-note">
+        <strong>When everything feels urgent, connection can keep getting postponed.</strong>
+        <p>
+          A growing pile of tasks and ideas can make people feel like one more demand. You may pull back to
+          focus, then plan to reconnect “when everything is done.” But the list can keep growing, while low
+          energy makes reaching out feel harder. This can happen even when connection still matters to you.
+        </p>
+        <p>
+          Try parking new ideas in a list instead of carrying them all in your head, choosing only one or two
+          active priorities, and letting a short call or shared walk fit into an unfinished week. Notice whether
+          time alone leaves you restored or more stuck and disconnected; either way, treat that as information,
+          not a reason to judge yourself.
+        </p>
+      </div>
+
       <h3>Want a low-pressure starting point?</h3>
       <ul>
         {IDEAS.map((idea) => <li key={idea}>{idea}</li>)}
