@@ -833,6 +833,9 @@ input[type='checkbox'] {
   margin-bottom: 16px;
 }
 .pages a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
   padding: 6px 14px;
   border-radius: 999px;
   border: 1px solid var(--line);
@@ -861,6 +864,15 @@ input[type='checkbox'] {
   border-radius: 14px;
   background: var(--card);
   cursor: pointer;
+}
+.tabs button strong {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tabs button strong svg {
+  flex: none;
+  color: var(--accent);
 }
 .tabs button small {
   color: var(--muted);

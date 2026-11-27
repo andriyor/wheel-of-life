@@ -12,7 +12,7 @@ import {
   type SphereState,
   type State,
 } from './priority.ts'
-import { HeartHandshake, Sparkles } from 'lucide-react'
+import { BookOpen, CircleGauge } from 'lucide-react'
 import { SphereIcon } from './icons.tsx'
 import { Wheel } from './Wheel.tsx'
 import { Tasks } from './Tasks.tsx'
@@ -76,10 +76,10 @@ export default function App() {
       <header>
         <nav className="pages" aria-label="Pages">
           <a href="#" aria-current={research ? undefined : 'page'}>
-            My wheel
+            <CircleGauge size={17} aria-hidden="true" /> My wheel
           </a>
           <a href="#research" aria-current={research ? 'page' : undefined}>
-            What the research says
+            <BookOpen size={17} aria-hidden="true" /> What the research says
           </a>
         </nav>
         <h1>{research ? 'What the research says' : 'Wheel of Life'}</h1>
