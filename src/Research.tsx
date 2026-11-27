@@ -3,13 +3,15 @@ import { MoodResearch } from './MoodResearch.tsx'
 import { HowILive } from './HowILive.tsx'
 import { HabitsResearch } from './HabitsResearch.tsx'
 import { SocialConnection } from './SocialConnection.tsx'
-import { Activity, HeartHandshake, Sparkles, TrendingUp } from 'lucide-react'
+import { TimeAwareness } from './TimeAwareness.tsx'
+import { Activity, Clock3, HeartHandshake, Sparkles, TrendingUp } from 'lucide-react'
 
 const TABS = [
   { id: 'mood', label: 'What lifts mood', hint: 'right now', Icon: Sparkles, Panel: MoodResearch },
   { id: 'life', label: 'How you live', hint: 'your read-out', Icon: Activity, Panel: HowILive },
   { id: 'years', label: 'Years & risk', hint: 'the evidence', Icon: TrendingUp, Panel: HabitsResearch },
   { id: 'connection', label: 'Social connection', hint: 'small steps', Icon: HeartHandshake, Panel: SocialConnection },
+  { id: 'time', label: 'Time & attention', hint: 'notice, don’t judge', Icon: Clock3, Panel: TimeAwareness },
 ] as const
 
 // One topic at a time instead of one very long scroll.

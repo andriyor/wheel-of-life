@@ -34,6 +34,14 @@ export function SocialConnection() {
         to connect if it would feel good, not as a quota. The quality of contact and whether it meets your needs
         matter more than watching a clock.
       </p>
+
+      <div className="sources">
+        <h3>Sources</h3>
+        <ul>
+          <li><a href="https://pubmed.ncbi.nlm.nih.gov/37337095/" target="_blank" rel="noreferrer">Systematic review of 90 cohort studies on social isolation, loneliness, and mortality</a> — long-term associations, not proof that one quiet day causes harm.</li>
+          <li><a href="https://www.socialconnectionguidelines.org/en/evidence-briefs/how-much-social-time-do-we-need" target="_blank" rel="noreferrer">Social Connection Guidelines: How much social time do we need?</a> — survey findings and proposed ranges; not a clinical minimum.</li>
+        </ul>
+      </div>
     </section>
   )
 }
